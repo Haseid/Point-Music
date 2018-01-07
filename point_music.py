@@ -6,9 +6,14 @@ from random import sample		# package to randomize numbers
 class Gui(object):
 	songs = listdir("Music/")	# fetching song-file names
 	ant = len(songs)			# amount of songs
-	random_numbers = []			# array with random numbers
+
 	history = []				# array to keep track of the songs in the random order
 	history_index = -1			# index to keep track of history
+	random_numbers = []			# array with random numbers
+	
+	color = "SteelBlue4"		# background color
+	font_1 = "Arial 11 bold"	# font for static label
+	font_2 = "Arial 11"			# font for label
 
 	def __init__(self, master):
 		# setting up master frame
@@ -16,10 +21,10 @@ class Gui(object):
 		master.resizable(width=FALSE, height=FALSE)
 
 		# creating frames
-		self.frame_left = Frame(master, bg="black", width=400, height=300)
-		self.frame_right = Frame(master, bg="green", width=400, height=300)
-		self.frame_inner_left = Frame(self.frame_left, bg="red")
-		self.frame_inner_right = Frame(self.frame_right, bg="red")
+		self.frame_left = Frame(master, bg=self.color, width=350, height=250)
+		self.frame_right = Frame(master, bg=self.color, width=350, height=250)
+		self.frame_inner_left = Frame(self.frame_left, bg=self.color)
+		self.frame_inner_right = Frame(self.frame_right, bg=self.color)
 		self.frame_inner_right_2 = Frame(self.frame_inner_right)
 
 		# layout for frames
@@ -29,8 +34,8 @@ class Gui(object):
 		self.frame_inner_right.place(in_=self.frame_right, anchor="c", relx=.5, rely=.5)
 
 		# creating widgets in left frame
-		self.label_static_1 = Label(self.frame_inner_left, text="Playing now:")
-		self.label_playing_song = Label(self.frame_inner_left, text="Nothing")
+		self.label_static_1 = Label(self.frame_inner_left, text="Playing now", bg=self.color, font=self.font_1)
+		self.label_playing_song = Label(self.frame_inner_left, text="Nothing", bg=self.color, font=self.font_2)
 		self.button_play = Button(self.frame_inner_left, text="Play next", command=self.start_music)
 
 		# layout for widgets in left frame
@@ -39,8 +44,8 @@ class Gui(object):
 		self.button_play.grid(row= 2)
 
 		# creating widgets in right frame
-		self.label_static_2 = Label(self.frame_inner_right, text="Playing now:")
-		self.label_next_song = Label(self.frame_inner_right, text="")
+		self.label_static_2 = Label(self.frame_inner_right, text="Playing next", bg=self.color, font=self.font_1)
+		self.label_next_song = Label(self.frame_inner_right, text="", bg=self.color, font=self.font_2)
 		self.button_next = Button(self.frame_inner_right_2, text="Next", command=self.next_song)
 		self.button_previous = Button(self.frame_inner_right_2, text="Previous", command=self.previous_song)
 
