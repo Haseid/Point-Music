@@ -1,14 +1,14 @@
 from tkinter import *
-from os import listdir		#get file names
-from pygame import mixer	#package to play mp3 files
-from random import sample
+from os import listdir			# package to get file names
+from pygame import mixer		# package to play mp3 files
+from random import sample		# package to randomize numbers
 
 class Gui(object):
-	songs = listdir("Music/")	#fetching song-file names
-	ant = len(songs)			#amount of songs
-	random_numbers = []			#array with random numbers
-	history = []				#array to keep track of the songs in the random order
-	history_index = -1			#index to keep track of history
+	songs = listdir("Music/")	# fetching song-file names
+	ant = len(songs)			# amount of songs
+	random_numbers = []			# array with random numbers
+	history = []				# array to keep track of the songs in the random order
+	history_index = -1			# index to keep track of history
 
 	def __init__(self, master):
 		# setting up master frame
@@ -16,21 +16,22 @@ class Gui(object):
 		master.resizable(width=FALSE, height=FALSE)
 
 		# creating frames
-		self.left_frame = Frame(master, bg="black", width=400, height=300)
-		self.right_frame = Frame(master, bg="green", width=400, height=300)
-		self.inner_left_frame = Frame(self.left_frame, bg="red")
-		self.inner_right_frame = Frame(self.right_frame, bg="red")
+		self.frame_left = Frame(master, bg="black", width=400, height=300)
+		self.frame_right = Frame(master, bg="green", width=400, height=300)
+		self.frame_inner_left = Frame(self.frame_left, bg="red")
+		self.frame_inner_right = Frame(self.frame_right, bg="red")
+		self.frame_inner_right_2 = Frame(self.frame_inner_right)
 
 		# layout for frames
-		self.left_frame.grid(row=0, column=0)
-		self.right_frame.grid(row=0, column=1)
-		self.inner_left_frame.place(in_=self.left_frame, anchor="c", relx=.5, rely=.5)
-		self.inner_right_frame.place(in_=self.right_frame, anchor="c", relx=.5, rely=.5)
+		self.frame_left.grid(row=0, column=0)
+		self.frame_right.grid(row=0, column=1)
+		self.frame_inner_left.place(in_=self.frame_left, anchor="c", relx=.5, rely=.5)
+		self.frame_inner_right.place(in_=self.frame_right, anchor="c", relx=.5, rely=.5)
 
 		# creating widgets in left frame
-		self.label_static_1 = Label(self.inner_left_frame, text="Playing now:")
-		self.label_playing_song = Label(self.inner_left_frame, text="Nothing")
-		self.button_play = Button(self.inner_left_frame, text="Play next", command=self.start_music)
+		self.label_static_1 = Label(self.frame_inner_left, text="Playing now:")
+		self.label_playing_song = Label(self.frame_inner_left, text="Nothing")
+		self.button_play = Button(self.frame_inner_left, text="Play next", command=self.start_music)
 
 		# layout for widgets in left frame
 		self.label_static_1.grid(row= 0)
@@ -38,16 +39,17 @@ class Gui(object):
 		self.button_play.grid(row= 2)
 
 		# creating widgets in right frame
-		self.label_static_2 = Label(self.inner_right_frame, text="Playing now:")
-		self.label_next_song = Label(self.inner_right_frame, text="")
-		self.button_previous = Button(self.inner_right_frame, text="Previous", command=self.previous_song)
-		self.button_next = Button(self.inner_right_frame, text="Next", command=self.next_song)
+		self.label_static_2 = Label(self.frame_inner_right, text="Playing now:")
+		self.label_next_song = Label(self.frame_inner_right, text="")
+		self.button_next = Button(self.frame_inner_right_2, text="Next", command=self.next_song)
+		self.button_previous = Button(self.frame_inner_right_2, text="Previous", command=self.previous_song)
 
 		# layout for widgets in right frame
-		self.label_static_2.grid(row=0, columnspan=2)
-		self.label_next_song.grid(row=1, columnspan=2)
-		self.button_previous.grid(row=2, column=0)
-		self.button_next.grid(row=2, column=1)
+		self.label_static_2.grid(row=0)
+		self.label_next_song.grid(row=1)
+		self.frame_inner_right_2.grid(row=2)
+		self.button_previous.pack(side=LEFT)
+		self.button_next.pack(side=LEFT)
 
 		# start up
 		mixer.init()
