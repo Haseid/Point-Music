@@ -21,9 +21,9 @@ class Gui(object):
 		# setting up master frame
 		master.title("Point Music")
 		master.resizable(width=FALSE, height=FALSE)
-		master.bind("<space>", self.start_stop_music_event)
-		master.bind("<Left>", self.previous_song_event)
-		master.bind("<Right>", self.next_song_event)
+		master.bind("<space>", self.start_stop_music)
+		master.bind("<Left>", self.previous_song)
+		master.bind("<Right>", self.next_song)
 
 		# creating frames
 		self.frame_left = Frame(master, bg=self.color, width=350, height=250)
@@ -41,7 +41,7 @@ class Gui(object):
 		# creating widgets in left frame
 		self.label_static_1 = Label(self.frame_inner_left, text="Playing now", bg=self.color, font=self.font_1)
 		self.label_playing_song = Label(self.frame_inner_left, text="Nothing", bg=self.color, font=self.font_2)
-		self.button_play = Button(self.frame_inner_left, text="Play next", command=self.start_stop_music)
+		self.button_play = Button(self.frame_inner_left, text="Play next", command=lambda: self.start_stop_music(""))
 
 		# layout for widgets in left frame
 		self.label_static_1.grid(row= 0)
@@ -51,8 +51,8 @@ class Gui(object):
 		# creating widgets in right frame
 		self.label_static_2 = Label(self.frame_inner_right, text="Playing next", bg=self.color, font=self.font_1)
 		self.label_next_song = Label(self.frame_inner_right, text="", bg=self.color, font=self.font_2)
-		self.button_next = Button(self.frame_inner_right_2, text="Next", command=self.next_song)
-		self.button_previous = Button(self.frame_inner_right_2, text="Previous", command=self.previous_song)
+		self.button_next = Button(self.frame_inner_right_2, text="Next", command=lambda: self.next_song(""))
+		self.button_previous = Button(self.frame_inner_right_2, text="Previous", command=lambda: self.previous_song(""))
 
 		# layout for widgets in right frame
 		self.label_static_2.grid(row=0)
@@ -63,23 +63,23 @@ class Gui(object):
 
 		# start up
 		mixer.init()
-		self.next_song()
+		self.next_song("")
 
-	# functions for buttons
-	def start_stop_music(self):
+	# functions for keybind events and buttons
+	def start_stop_music(self, event):
 		if self.start:
 			mixer.music.load("Music/"+self.songs[self.history[self.history_index]])
 			mixer.music.play()
 			self.label_playing_song.config(text=self.songs[self.history[self.history_index]][:-4])
 			self.button_play.config(text="Fade out")
-			self.next_song()
+			self.next_song("")
 			self.start = False
 		else:
 			mixer.music.fadeout(1500)
 			self.button_play.config(text="Play next")
 			self.start = True
 
-	def next_song(self):
+	def next_song(self, event):
 		self.history_index += 1
 		while (len(self.history) <= self.history_index):
 			if self.random_numbers == []:
@@ -88,35 +88,7 @@ class Gui(object):
 			self.history.append (self.random_number)
 		self.label_next_song.config(text=self.songs[self.history[self.history_index]][:-4])
 
-	def previous_song(self):
-		if self.history_index > 0:
-			self.history_index -= 1
-			self.label_next_song.config(text=self.songs[self.history[self.history_index]][:-4])
-
-	# functions for keybind events
-	def start_stop_music_event(self, event):
-		if self.start:
-			mixer.music.load("Music/"+self.songs[self.history[self.history_index]])
-			mixer.music.play()
-			self.label_playing_song.config(text=self.songs[self.history[self.history_index]][:-4])
-			self.button_play.config(text="Fade out")
-			self.next_song()
-			self.start = False
-		else:
-			mixer.music.fadeout(1500)
-			self.button_play.config(text="Play next")
-			self.start = True
-
-	def next_song_event(self, event):
-		self.history_index += 1
-		while (len(self.history) <= self.history_index):
-			if self.random_numbers == []:
-				self.random_numbers = sample(range(self.ant), self.ant)
-			self.random_number = self.random_numbers.pop()
-			self.history.append (self.random_number)
-		self.label_next_song.config(text=self.songs[self.history[self.history_index]][:-4])
-
-	def previous_song_event(self, event):
+	def previous_song(self, event):
 		if self.history_index > 0:
 			self.history_index -= 1
 			self.label_next_song.config(text=self.songs[self.history[self.history_index]][:-4])
